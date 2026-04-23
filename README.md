@@ -21,8 +21,13 @@ Agentcore Code Interpreter
 Identity & Access Managment
 
 
-
-
+**Model**
+Anthropic Haiku 4.5 - 5M TPM (Tokens Per Minute), 10 RPM (Requests Per Minute)
 
 **Sources**
 Amazon Bedrock AgentCore Dev Guide: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-how-it-works.html
+
+**Challenges**
+Model Access
+- AWS sets all new accounts to have 0 TPM or RPM for all models by default. In order to avoid this rate limit throttling, I sent a quota increase request to AWS Support & 
+    the issue was resolved by giving me fundamental access to all models available on AWS. 
