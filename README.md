@@ -1,5 +1,5 @@
 **Project Idea**
-An agentic AI tool, CodeCoach recives DSA/Leetcode Style code responses from the user and provides memory integrated
+A terminal based (at the moment) AWS-Based Agentic AI, CodeCoach recives DSA/Leetcode Style code responses from the user and provides memory integrated
 hints, responses, and solutions in a converstional manner to the user. Instead of just an LLM giving a response to code, 
 CodeCoach's agent statefully tracks and acts over time to provide better code support related to data structures and algorithms. 
 
