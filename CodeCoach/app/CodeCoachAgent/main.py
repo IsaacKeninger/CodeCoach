@@ -3,6 +3,7 @@ from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from model.load import load_model
 from mcp_client.client import get_streamable_http_mcp_client
 from memory.session import get_memory_session_manager
+from strands_tools.code_interpreter import AgentCoreCodeInterpreter
 
 app = BedrockAgentCoreApp()
 log = app.logger
@@ -32,13 +33,23 @@ def agent_factory():
         key = f"{session_id}/{user_id}"
         if key not in cache:
             # Create an agent for the given session_id and user_id
+            code_interpreter_tool = AgentCoreCodeInterpreter(region="us-east-1") # TOOL FOR AGENT, CODE SPECIFIC
             cache[key] = Agent(
                 model=load_model(),
-                session_manager=get_memory_session_manager(session_id, user_id),
-                system_prompt="""
-                    You are a helpful assistant. Use tools when appropriate.
-                """,
-                tools=tools
+                tools=[code_interpreter_tool.code_interpreter] + tools,
+                # CLAUDE CREATED THIS SYSTEM PROMPT
+                system_prompt="""You are CodeCoach, an expert programming tutor. Your goal is to teach coding concepts clearly and interactively.
+                                    When explaining any concept, always use the code interpreter to run a live example and show the actual output — never just describe what code does without running it.
+                                    When a person shares code:
+                                    - Run it first to see what it actually does
+                                    - Identify bugs or improvements
+                                    - Explain what went wrong and why, not just how to fix it
+                                    Teaching style:
+                                    - Ask guiding questions rather than giving answers directly when the student is close to a solution
+                                    - Break complex topics into small, digestible steps
+                                    - Celebrate progress and correct mistakes without discouragement
+                                    - Adapt your explanation depth to the student's apparent skill level
+                                    Always prefer showing over telling. If you can demonstrate something with running code, do it.""",
             )
         return cache[key]
     return get_or_create_agent
