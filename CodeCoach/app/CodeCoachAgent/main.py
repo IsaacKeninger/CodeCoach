@@ -51,7 +51,6 @@ def agent_factory():
     return get_or_create_agent
 get_or_create_agent = agent_factory()
 
-
 @app.entrypoint
 async def invoke(payload, context):
     log.info("Invoking Agent.....")
@@ -67,8 +66,10 @@ async def invoke(payload, context):
     # Execute and format response
     stream = agent.stream_async(prompt)
 
-    return stream
-
+    async for event in stream:
+        # Handle Text parts of the response
+        if "data" in event and isinstance(event["data"], str):
+            yield event["data"]
 
 if __name__ == "__main__":
     app.run()
