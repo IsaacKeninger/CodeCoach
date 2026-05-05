@@ -60,6 +60,9 @@ async def invoke(payload, context):
     user_id = getattr(context, 'user_id', 'default-user') # UNIQUE USER ID
     agent = get_or_create_agent(session_id, user_id) # Get or Make an Agent for that session and user.
     prompt = payload.get("prompt") # user prompt
+    
+    if not prompt: # eeor handling for prompts
+        raise Exception("payload must include a non empty prompt")
 
     # Execute and format response
     stream = agent.stream_async(prompt)
