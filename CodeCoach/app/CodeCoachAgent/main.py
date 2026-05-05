@@ -5,6 +5,7 @@ from mcp_client.client import get_streamable_http_mcp_client
 from memory.session import get_memory_session_manager
 from strands_tools.code_interpreter import AgentCoreCodeInterpreter
 
+
 app = BedrockAgentCoreApp()
 log = app.logger
 
@@ -13,13 +14,6 @@ mcp_clients = [get_streamable_http_mcp_client()]
 
 # Define a collection of tools used by the model
 tools = []
-
-# Define a simple function tool
-@tool
-def add_numbers(a: int, b: int) -> int:
-    """Return the sum of two numbers"""
-    return a+b
-tools.append(add_numbers)
 
 # Add MCP client to tools if available
 for mcp_client in mcp_clients:
@@ -34,6 +28,7 @@ def agent_factory():
         if key not in cache:
             # Create an agent for the given session_id and user_id
             code_interpreter_tool = AgentCoreCodeInterpreter(region="us-east-1") # TOOL FOR AGENT, CODE SPECIFIC
+            memory_manager_tool = get_memory_session_manager(session_id, user_id)
             cache[key] = Agent(
                 model=load_model(),
                 tools=[code_interpreter_tool.code_interpreter] + tools,
@@ -50,6 +45,7 @@ def agent_factory():
                                     - Celebrate progress and correct mistakes without discouragement
                                     - Adapt your explanation depth to the student's apparent skill level
                                     Always prefer showing over telling. If you can demonstrate something with running code, do it.""",
+                conversation_manager=memory_manager_tool
             )
         return cache[key]
     return get_or_create_agent
@@ -60,17 +56,15 @@ get_or_create_agent = agent_factory()
 async def invoke(payload, context):
     log.info("Invoking Agent.....")
 
-    session_id = getattr(context, 'session_id', 'default-session')
-    user_id = getattr(context, 'user_id', 'default-user')
-    agent = get_or_create_agent(session_id, user_id)
+    session_id = getattr(context, 'session_id', 'default-session') # UNIQUE SESSION ID
+    user_id = getattr(context, 'user_id', 'default-user') # UNIQUE USER ID
+    agent = get_or_create_agent(session_id, user_id) # Get or Make an Agent for that session and user.
+    prompt = payload.get("prompt") # user prompt
 
     # Execute and format response
-    stream = agent.stream_async(payload.get("prompt"))
+    stream = agent.stream_async(prompt)
 
-    async for event in stream:
-        # Handle Text parts of the response
-        if "data" in event and isinstance(event["data"], str):
-            yield event["data"]
+    return stream
 
 
 if __name__ == "__main__":

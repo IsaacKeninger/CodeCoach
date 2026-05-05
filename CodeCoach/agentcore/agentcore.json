@@ -20,7 +20,7 @@
   ],
   "memories": [
     {
-      "name": "CodeCoachAgentMemory",
+      "name": "CodeCoachMemory",
       "eventExpiryDuration": 30,
       "strategies": [
         {
@@ -30,15 +30,15 @@
           ]
         },
         {
-          "type": "USER_PREFERENCE",
-          "namespaces": [
-            "/users/{actorId}/preferences"
-          ]
-        },
-        {
           "type": "SUMMARIZATION",
           "namespaces": [
             "/summaries/{actorId}/{sessionId}"
+          ]
+        },
+        {
+          "type": "USER_PREFERENCE",
+          "namespaces": [
+            "/users/{actorId}/preferences"
           ]
         },
         {

@@ -15,6 +15,7 @@ def get_memory_session_manager(session_id: str, actor_id: str) -> Optional[Agent
         f"/users/{actor_id}/facts": RetrievalConfig(top_k=3, relevance_score=0.5),
         f"/users/{actor_id}/preferences": RetrievalConfig(top_k=3, relevance_score=0.5),
         f"/summaries/{actor_id}/{session_id}": RetrievalConfig(top_k=3, relevance_score=0.5),
+    f"/episodes/{actor_id}/{session_id}": RetrievalConfig(top_k=3, relevance_score=0.5), 
     }
 
     return AgentCoreMemorySessionManager(
