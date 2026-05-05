@@ -1,3 +1,22 @@
 {
-  "targets": {}
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "CodeCoachAgent": {
+            "runtimeId": "CodeCoach_CodeCoachAgent-4eI0q4Bz7E",
+            "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:563170906914:runtime/CodeCoach_CodeCoachAgent-4eI0q4Bz7E",
+            "roleArn": "arn:aws:iam::563170906914:role/AgentCore-CodeCoach-defau-ApplicationAgentCodeCoach-uRAE0JCj4fMc"
+          }
+        },
+        "memories": {
+          "CodeCoachMemory": {
+            "memoryId": "CodeCoach_CodeCoachMemory-3I74eA6TJ4",
+            "memoryArn": "arn:aws:bedrock-agentcore:us-east-1:563170906914:memory/CodeCoach_CodeCoachMemory-3I74eA6TJ4"
+          }
+        },
+        "stackName": "AgentCore-CodeCoach-default"
+      }
+    }
+  }
 }

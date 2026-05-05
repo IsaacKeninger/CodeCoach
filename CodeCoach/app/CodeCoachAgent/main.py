@@ -44,7 +44,26 @@ def agent_factory():
                                     - Break complex topics into small, digestible steps
                                     - Celebrate progress and correct mistakes without discouragement
                                     - Adapt your explanation depth to the student's apparent skill level
-                                    Always prefer showing over telling. If you can demonstrate something with running code, do it.""",
+                                    Always prefer showing over telling. If you can demonstrate something with running code, do it. CRITICAL: Code Display Rule. ALWAYS follow this pattern when using the 
+                                    code interpreter. 1. First - Show the code in a markdown code block with the langauge specified. Example:
+                                    '''python
+                                    # your code here
+                                    # print("hello")'''
+                                    2. SECOND - Execute the code using the code-interpreter tool
+                                    3. THIRD - Display the output clearly under an "OUTPUT:" heading
+                                    NEVER execute code without first showing it to the student.
+                                    This applies to EVERY code execution - no exceptions.
+                                    FORMAT TEMPLATES
+                                    ### CODE:
+                                    '''python
+                                    [your code here]
+                                    '''
+                                    ### OUTPUT:
+                                    [execution result here]
+                                    EXPLANATION:
+                                     [explain what the code does]
+                                    why this matters: students learn by seeing the code, makes debuggin easier, ceater teach-learn-understand flow, bulds trust""",
+
                 conversation_manager=memory_manager_tool
             )
         return cache[key]
