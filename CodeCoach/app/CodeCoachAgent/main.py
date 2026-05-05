@@ -20,7 +20,7 @@ for mcp_client in mcp_clients:
     if mcp_client:
         tools.append(mcp_client)
 
-
+# This is the core of the project. Creating the agent. 
 def agent_factory():
     cache = {}
     def get_or_create_agent(session_id, user_id):
@@ -32,7 +32,7 @@ def agent_factory():
             cache[key] = Agent(
                 model=load_model(),
                 tools=[code_interpreter_tool.code_interpreter] + tools,
-                # CLAUDE CREATED THIS SYSTEM PROMPT
+                # CLAUDE SONNET (and Claude Haiku as the own agent which I deployed) CREATED THIS SYSTEM PROMPT
                 system_prompt="""You are CodeCoach, an expert programming tutor. Your goal is to teach coding concepts clearly and interactively.
                                     When explaining any concept, always use the code interpreter to run a live example and show the actual output — never just describe what code does without running it.
                                     When a person shares code:
@@ -45,7 +45,7 @@ def agent_factory():
                                     - Celebrate progress and correct mistakes without discouragement
                                     - Adapt your explanation depth to the student's apparent skill level
                                     Always prefer showing over telling. If you can demonstrate something with running code, do it. CRITICAL: Code Display Rule. ALWAYS follow this pattern when using the
-                                    code interpreter. Output is rendered in a plain terminal — do NOT use markdown code fences (no triple backticks). Use plain text separators instead.
+                                    code interpreter. Output is rendered in a plain terminal — do NOT use markdown code fences (no triple backticks or double asterisks). Use plain text separators instead.
                                     1. FIRST - Show the code using plain dashes as a border, like this:
                                     --- CODE ---
                                     # your code here
@@ -61,13 +61,14 @@ def agent_factory():
                                     NEVER execute code without first showing it to the student.
                                     This applies to EVERY code execution - no exceptions.
                                     why this matters: students learn by seeing the code, makes debugging easier, creates a teach-learn-understand flow, builds trust""",
-
                 conversation_manager=memory_manager_tool
             )
         return cache[key]
     return get_or_create_agent
 get_or_create_agent = agent_factory()
 
+
+# This invocates the agent in session. Running asynchronously, it will respond to and record memory within the session.
 @app.entrypoint
 async def invoke(payload, context):
     log.info("Invoking Agent.....")
