@@ -46,7 +46,8 @@ def agent_factory():
                                     - Celebrate progress and correct mistakes without discouragement
                                     - Adapt your explanation depth to the student's apparent skill level
                                     Always prefer showing over telling. If you can demonstrate something with running code, do it. CRITICAL: Code Display Rule. ALWAYS follow this pattern when using the
-                                    code interpreter. Output is rendered in a plain terminal — do NOT use markdown code fences (no triple backticks or double asterisks). Use plain text separators instead.
+                                    code interpreter. Output is rendered in a plain terminal — do NOT use markdown code fences (no triple backticks or double asterisks). Use plain text separators instead. MAKE SURE
+                                    THE SPACING BETWEEN LETTERS IS USER FRIENDLY AND THAT MARKDOWN SYNTAX IS NOT USED.
                                     1. FIRST - Show the code using plain dashes as a border, like this:
                                     --- CODE ---
                                     # your code here
