@@ -9,7 +9,6 @@ app = BedrockAgentCoreApp()
 log = app.logger
 
 # MCP SECTION. Allows for web searching when formulating responses.
-
 # Define a Streamable HTTP MCP Client
 mcp_clients = [get_streamable_http_mcp_client()]
 # Define a collection of tools used by the model
@@ -18,8 +17,6 @@ tools = []
 for mcp_client in mcp_clients:
     if mcp_client:
         tools.append(mcp_client)
-
-
 
 # This is the core of the project. Creating the agent. 
 def agent_factory():
@@ -33,7 +30,7 @@ def agent_factory():
             cache[key] = Agent(
                 model=load_model(),
                 tools=[code_interpreter_tool.code_interpreter] + tools,
-                # CLAUDE SONNET (and Claude Haiku as the own agent which I deployed) CREATED THIS SYSTEM PROMPT
+                # CLAUDE SONNET (and Claude Haiku as the own agent which I deployed) CREATED THIS SYSTEM PROMPT. Gives Personality to Agent. 
                 system_prompt="""You are CodeCoach, an expert programming tutor. Your goal is to teach coding concepts clearly and interactively.
                                     When explaining any concept, always use the code interpreter to run a live example and show the actual output — never just describe what code does without running it.
                                     When a person shares code:
@@ -63,7 +60,7 @@ def agent_factory():
                                     NEVER execute code without first showing it to the student.
                                     This applies to EVERY code execution - no exceptions.
                                     why this matters: students learn by seeing the code, makes debugging easier, creates a teach-learn-understand flow, builds trust""",
-                conversation_manager=memory_manager_tool
+                conversation_manager=memory_manager_tool # tracks memory
             )
         return cache[key]
     return get_or_create_agent
