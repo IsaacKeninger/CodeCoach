@@ -5,20 +5,21 @@ from mcp_client.client import get_streamable_http_mcp_client
 from memory.session import get_memory_session_manager
 from strands_tools.code_interpreter import AgentCoreCodeInterpreter
 
-
 app = BedrockAgentCoreApp()
 log = app.logger
 
+# MCP SECTION. Allows for web searching when formulating responses.
+
 # Define a Streamable HTTP MCP Client
 mcp_clients = [get_streamable_http_mcp_client()]
-
 # Define a collection of tools used by the model
 tools = []
-
 # Add MCP client to tools if available
 for mcp_client in mcp_clients:
     if mcp_client:
         tools.append(mcp_client)
+
+
 
 # This is the core of the project. Creating the agent. 
 def agent_factory():
@@ -67,14 +68,13 @@ def agent_factory():
     return get_or_create_agent
 get_or_create_agent = agent_factory()
 
-
 # This invocates the agent in session. Running asynchronously, it will respond to and record memory within the session.
 @app.entrypoint
 async def invoke(payload, context):
-    log.info("Invoking Agent.....")
+    log.info("Invoking Agent.....") # calling agent
 
     session_id = getattr(context, 'session_id', 'default-session') # UNIQUE SESSION ID
-    user_id = getattr(context, 'user_id', 'default-user') # UNIQUE USER ID
+    user_id = getattr(context, 'user_id', 'default-user') # UNIQUE USER ID (defaults to default-user for our use case)
     agent = get_or_create_agent(session_id, user_id) # Get or Make an Agent for that session and user.
     prompt = payload.get("prompt") # user prompt
     
@@ -87,7 +87,7 @@ async def invoke(payload, context):
     async for event in stream:
         # Handle Text parts of the response
         if "data" in event and isinstance(event["data"], str):
-            yield event["data"]
+            yield event["data"] # this means it keeps this data/uses it
 
 if __name__ == "__main__":
     app.run()
